@@ -1,17 +1,13 @@
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
-  ubuntu_hello:
+  zap_scan:
     runs-on: ubuntu-latest
+    name: Scan the webapplication
     steps:
-      - run: echo "Hello World from Ubuntu Runner!!"
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event"
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "GitHub Repository URL is ${{ github.repositoryUrl}} and branch is ${{ github.ref_name }} "
-      - name: Cloning GitHub Repo 
-        uses: actions/checkout@v3
-      - name: List files in workspace
-        run: ls ${{ github.workspace }}
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+          target: 'http://testphp.vulnweb.com/'
